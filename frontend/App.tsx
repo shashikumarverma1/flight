@@ -4,12 +4,13 @@ import { NavigationContainer } from "@react-navigation/native";
 import BottomTabs from "./navigation/bottomTab";
 import RootStack from "./navigation/rootStack";
 import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function App() {
-  const [isAuthenticated , setIsAuthenticated]=useState(false)
+export default  function App() {
+
   return (
     <NavigationContainer>
-      <RootStack isAuthenticated={isAuthenticated} />
+      <RootStack  />
     </NavigationContainer>
   );
 }

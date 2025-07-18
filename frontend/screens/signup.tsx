@@ -1,6 +1,6 @@
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useReducer, useState } from "react";
 import {
   View,
   Text,
@@ -12,44 +12,60 @@ import {
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { ScrollView } from "react-native-gesture-handler";
+import useUserStore from "../store/userStore";
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+type RootStackParamList = {
+  Login: undefined
+  Home: undefined
+}
 
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
-export const Signup = () => {
-  const [useData, setUserData] = useState({
+type SignupScreenProps = {
+  navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>
+}
+
+export const Signup: React.FC<SignupScreenProps> = ({ navigation })=> {
+
+  const [emailErr, setEmailErr] = useState("")
+  const [passwordErr, setPasswordErr] = useState("")
+  const [nameErr, setNameErr] = useState("")
+  const setUser = useUserStore((state) => state.setUser)
+  const [userData, setUserData] = useState({
     name: "",
     email: "",
     password: "",
   });
-  const navigation: any = useNavigation();
+
   const signUpHandle = async () => {
+    console.log(userData, "useData")
+    // navigation.navigate("Home")
+    // return;
 
-    navigation.navigate("Home")
-    return;
-    if (!useData.name) {
-      alert("please add name");
+    if (!userData?.name) {
+      setNameErr("name is required")
       return;
     }
-    if (!useData.mobile) {
-      alert("please add mobile");
-      return;
-    }
-    if (!useData.email) {
-      alert("please add email");
-      return;
-    }
-    if (!useData.password) {
-      alert("please add password");
-      return;
-    }
-    let name = await AsyncStorage.getItem("name");
 
-    if (!name) {
-
-    } else {
-      alert("Already user please login");
+    if (!userData?.email) {
+      setEmailErr("email is required")
+ 
+      return;
     }
+    if (!userData?.password) {
+      setPasswordErr("password is required")
+
+      return;
+    }
+    setUser(userData)
+
   };
+
+  const handleChange=useCallback((value:any)=>{
+setUserData({...userData , ...value})
+setEmailErr("")
+setNameErr("")
+setPasswordErr("")
+  } , [setUserData , userData])
+
   return (
     <ScrollView style={{ marginHorizontal: 20 }}>
       <View style={{ marginTop: 50 }}>
@@ -59,77 +75,66 @@ export const Signup = () => {
           </Text>
         </Pressable>
         <View style={{ marginBottom: 45 }}>
-          <Text style={{ marginTop: 50, fontWeight: "800", fontSize: 30 }}>
+          <Text style={styles.signupHeading}>
             Sign up
           </Text>
 
         </View>
         <Text
-          style={{
-            fontWeight: "600",
-            fontSize: 20,
-            lineHeight: 20,
-            marginBottom: 10,
-            color: "#666666",
-          }}
+          style={styles.lable}
         >
           Name
         </Text>
 
         <TextInput
           style={styles.input}
-          onChangeText={(e) => setUserData({ ...useData, name: e })}
-          value={useData.name}
+          onChangeText={(e) => handleChange({ name: e })}
+          value={userData.name}
           placeholder="Enter your name"
         />
+        {
+          nameErr && <Text style={styles.err}>{nameErr}</Text>
+        }
         <Text
-          style={{
-            fontWeight: "600",
-            fontSize: 20,
-            lineHeight: 20,
-            marginBottom: 10,
-            color: "#666666",
-          }}
+          style={styles.lable}
         >
           Email
         </Text>
 
         <TextInput
           style={styles.input}
-          onChangeText={(e) => setUserData({ ...useData, email: e.trim() })}
-          value={useData.email}
+      
+            onChangeText={(e) => handleChange({ email: e.trim() })}
+          value={userData.email}
           placeholder="Enter your email"
         />
-
+        {
+          emailErr && <Text style={styles.err}>{emailErr}</Text>
+        }
         <Text
-          style={{
-            fontWeight: "600",
-            fontSize: 20,
-            lineHeight: 20,
-            marginBottom: 10,
-            color: "#666666",
-          }}
+          style={styles.lable}
         >
           Password
         </Text>
         <TextInput
           style={styles.input}
-          onChangeText={(e) => setUserData({ ...useData, password: e.trim() })}
-          value={useData.password}
+
+           onChangeText={(e) => handleChange({ password: e.trim() })}
+          value={userData.password}
           secureTextEntry={true}
           placeholder="Enter your password"
         />
+
+        {
+          passwordErr && <Text style={styles.err}>{passwordErr}</Text>
+        }
         <View
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "row",
-            marginHorizontal: 20,
-          }}
+          style={[styles.signupButtonContainer ,  (!userData.name || !userData.email || !userData.password) && { opacity: 0.5 }]}
         >
           <Pressable
             style={styles.signupButtonContainer}
             onPress={signUpHandle}
+             disabled={!userData.name || !userData.email || !userData.password}
           >
             <Text style={styles.signupLable}>Signup</Text>
           </Pressable>
@@ -146,7 +151,7 @@ export const Signup = () => {
               navigation.navigate("Login");
             }}
           >
-            <Text style={{ color: "blue", fontSize: 15, fontWeight: "500" }}>
+            <Text style={styles.signinLeble}>
               Signin
             </Text>
           </Pressable>
@@ -157,17 +162,42 @@ export const Signup = () => {
 };
 
 const styles = StyleSheet.create({
-  signupButtonContainer:{
-              backgroundColor: "#0D88C3",
-              height: 45,
-              width: windowWidth / 1.05,
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 15,
-              borderWidth: 1,
-              borderColor: "grey",
-            },
-  signupLable:{ color: "#ffff", fontWeight: "800" },
+  err: {
+    fontSize: 14,
+    fontWeight: "400",
+    color: "red",
+    paddingBottom: 10,
+    marginTop: -10
+  },
+  signinLeble: { color: "blue", fontSize: 15, fontWeight: "500" },
+  signupHeading: {
+    marginTop: 50,
+    fontWeight: "800",
+    fontSize: 30
+  },
+  lable: {
+    fontWeight: "600",
+    fontSize: 20,
+    lineHeight: 20,
+    marginBottom: 10,
+    color: "#666666",
+  },
+  // signupButtonContainer:{
+  //           display: "flex",
+  //           justifyContent: "center",
+  //           flexDirection: "row",
+  //           marginHorizontal: 20,
+  //         },
+  signupButtonContainer: {
+    backgroundColor: "#0D88C3",
+    height: 45,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 15,
+ 
+  },
+  signupLable: { color: "#ffff", fontWeight: "800" },
   allReadyAccountContainer: {
     display: "flex",
     justifyContent: "center",
