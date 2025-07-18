@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Pressable,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { ScrollView } from "react-native-gesture-handler";
@@ -61,9 +62,9 @@ export const Signup: React.FC<SignupScreenProps> = ({ navigation })=> {
 
       return;
     }
-     let res=await axios.post("http://192.168.31.214:5000/register" ,userData )
-     if(res.status==200){
-   setUser(userData)
+     let res=await axios.post("http://192.168.31.214:3000/register" ,userData )
+     if(res.status==201){
+   navigation.navigate("Login")
      }
  
 
@@ -141,13 +142,13 @@ setPasswordErr("")
         <View
           style={[styles.signupButtonContainer ,  (!userData.name || !userData.email || !userData.password) && { opacity: 0.5 }]}
         >
-          <Pressable
+          <TouchableOpacity
             style={styles.signupButtonContainer}
             onPress={signUpHandle}
              disabled={!userData.name || !userData.email || !userData.password}
           >
             <Text style={styles.signupLable}>Signup</Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
 
         <View

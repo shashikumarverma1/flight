@@ -8,11 +8,14 @@ import {
   Pressable,
   StyleSheet,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
 
 import { ScrollView } from "react-native-gesture-handler";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { isValidEmail } from "../utils/validEmail";
+import axios from "axios";
+import useUserStore from "../store/userStore";
 type RootStackParamList = {
   Signup: undefined;
   Home: undefined;
@@ -21,6 +24,7 @@ type NavigationProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Signup'>
 }
 export const Login: React.FC<NavigationProps> = ({ navigation }) => {
+  const setUser = useUserStore((state) => state.setUser)
   const [emailErr, setEmailErr] = useState("")
   const [passwordErr, setPasswordErr] = useState("")
   const [userData, setUserData] = useState({
@@ -28,14 +32,14 @@ export const Login: React.FC<NavigationProps> = ({ navigation }) => {
     password: "",
   });
 
-  const signInHandle = () => {
+  const signInHandle = async () => {
 
     if (!userData.email) {
       setEmailErr('email is required field')
       return;
     }
-    if(!isValidEmail(userData.email.trim())){
-        setEmailErr('enter a valid email')
+    if (!isValidEmail(userData.email.trim())) {
+      setEmailErr('enter a valid email')
       return
     }
     if (!userData.password) {
@@ -43,6 +47,14 @@ export const Login: React.FC<NavigationProps> = ({ navigation }) => {
       return;
     }
     console.log(userData, "iser")
+    let res = await axios.post("http://192.168.31.214:3000/login", userData)
+    //  res= await res.json()
+    console.log(res?.data, "sss")
+    if (res.status == 200) {
+      setUser({
+        token: res?.data?.token
+      })
+    }
   };
   const handleChange = useCallback((value: any) => {
 
@@ -92,18 +104,18 @@ export const Login: React.FC<NavigationProps> = ({ navigation }) => {
         {
           passwordErr && <Text style={styles.err}>{passwordErr}</Text>
         }
-        <Pressable
-          style={[styles.signinContainer , ( !userData.email || !userData.password) && { opacity: 0.5 }]}
+        <TouchableOpacity
+          style={[styles.signinContainer, (!userData.email || !userData.password) && { opacity: 0.5 }]}
           onPress={() => signInHandle()}
         >
           <Text style={styles.signinLableStyle}>Signin</Text>
-        </Pressable>
+        </TouchableOpacity>
 
         <View
           style={styles.allReadyTextContainer}
         >
           <Text style={styles.allReadyAccount}>
-         Don’t have an account?
+            Don’t have an account?
           </Text>
           <Pressable
             onPress={() => {
@@ -111,7 +123,7 @@ export const Login: React.FC<NavigationProps> = ({ navigation }) => {
               navigation.navigate("Signup");
             }}
           >
-            <Text style={[styles.signinLable , ]}>
+            <Text style={[styles.signinLable,]}>
               Sign up
             </Text>
           </Pressable>
