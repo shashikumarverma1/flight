@@ -23,7 +23,7 @@ const useUserStore = create<UserStore>()(
     }),
     {
       name: 'user-storage',
-      storage: createJSONStorage(() => AsyncStorage),
+    //   storage: createJSONStorage(() => AsyncStorage),
       onRehydrateStorage: () => () => console.log('✅ Zustand store rehydrated'),
     }
   )

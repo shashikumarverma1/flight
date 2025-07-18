@@ -12,6 +12,7 @@ import {
 
 import { ScrollView } from "react-native-gesture-handler";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { isValidEmail } from "../utils/validEmail";
 type RootStackParamList = {
   Signup: undefined;
   Home: undefined;
@@ -32,6 +33,10 @@ export const Login: React.FC<NavigationProps> = ({ navigation }) => {
     if (!userData.email) {
       setEmailErr('email is required field')
       return;
+    }
+    if(!isValidEmail(userData.email.trim())){
+        setEmailErr('enter a valid email')
+      return
     }
     if (!userData.password) {
       setPasswordErr('password is required field')
@@ -88,7 +93,7 @@ export const Login: React.FC<NavigationProps> = ({ navigation }) => {
           passwordErr && <Text style={styles.err}>{passwordErr}</Text>
         }
         <Pressable
-          style={styles.signinContainer}
+          style={[styles.signinContainer , ( !userData.email || !userData.password) && { opacity: 0.5 }]}
           onPress={() => signInHandle()}
         >
           <Text style={styles.signinLableStyle}>Signin</Text>
@@ -106,7 +111,7 @@ export const Login: React.FC<NavigationProps> = ({ navigation }) => {
               navigation.navigate("Signup");
             }}
           >
-            <Text style={styles.signinLable}>
+            <Text style={[styles.signinLable , ]}>
               Sign up
             </Text>
           </Pressable>

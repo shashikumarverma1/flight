@@ -14,6 +14,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { ScrollView } from "react-native-gesture-handler";
 import useUserStore from "../store/userStore";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { isValidEmail } from "../utils/validEmail";
 type RootStackParamList = {
   Login: undefined
   Home: undefined
@@ -50,6 +51,10 @@ export const Signup: React.FC<SignupScreenProps> = ({ navigation })=> {
  
       return;
     }
+      if(!isValidEmail(userData.email.trim())){
+            setEmailErr('enter a valid email')
+          return
+        }
     if (!userData?.password) {
       setPasswordErr("password is required")
 
