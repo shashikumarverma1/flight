@@ -10,12 +10,13 @@ const generateToken = (user) => {
 
 exports.register = async (req, res) => {
   const { name, email, password } = req.body;
+  console.log(req.body , "hhhh")
   try {
     // const existingUser = await User.findOne({ email });
     // if (existingUser) return res.status(400).json({ msg: 'Email already registered' });
 
-    const user = await User.create({ name, email, password });
-    const token = generateToken(user);
+    // const user = await User.create({ name, email, password });
+    // const token = generateToken(user);
 
     res.status(201).json({ token, user: { id: user._id, name: user.name, email: user.email } });
   } catch (err) {

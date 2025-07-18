@@ -15,6 +15,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import useUserStore from "../store/userStore";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { isValidEmail } from "../utils/validEmail";
+import axios from "axios";
 type RootStackParamList = {
   Login: undefined
   Home: undefined
@@ -60,7 +61,11 @@ export const Signup: React.FC<SignupScreenProps> = ({ navigation })=> {
 
       return;
     }
-    setUser(userData)
+     let res=await axios.post("http://192.168.31.214:5000/register" ,userData )
+     if(res.status==200){
+   setUser(userData)
+     }
+ 
 
   };
 
