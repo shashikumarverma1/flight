@@ -48,8 +48,7 @@ export const Login: React.FC<NavigationProps> = ({ navigation }) => {
     }
     console.log(userData, "iser")
     let res = await axios.post("http://192.168.31.214:3000/login", userData)
-    //  res= await res.json()
-    console.log(res?.data, "sss")
+
     if (res.status == 200) {
       setUser({
         token: res?.data?.token
