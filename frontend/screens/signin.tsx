@@ -7,8 +7,6 @@ import {
   Text,
   Pressable,
   StyleSheet,
-  Dimensions,
-  TouchableOpacity,
 } from "react-native";
 
 import { ScrollView } from "react-native-gesture-handler";
@@ -16,6 +14,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { isValidEmail } from "../utils/validEmail";
 import axios from "axios";
 import useUserStore from "../store/userStore";
+import { Button } from "../components/Button";
+import { BASE_URL } from "../api";
 type RootStackParamList = {
   Signup: undefined;
   Home: undefined;
@@ -24,16 +24,21 @@ type NavigationProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Signup'>
 }
 export const Login: React.FC<NavigationProps> = ({ navigation }) => {
-  const setUser = useUserStore((state) => state.setUser)
+  const {setUser , user} = useUserStore()
   const [emailErr, setEmailErr] = useState("")
   const [passwordErr, setPasswordErr] = useState("")
   const [userData, setUserData] = useState({
     email: "",
     password: "",
   });
-
+console.log(user)
   const signInHandle = async () => {
-
+    console.log(user , "cjsdj")
+  setUser({
+       name:"shashi",
+       email:"s@gmail.com",
+       token:"sjhdhdshkfbsdhbfh"
+      })
     if (!userData.email) {
       setEmailErr('email is required field')
       return;
@@ -47,7 +52,7 @@ export const Login: React.FC<NavigationProps> = ({ navigation }) => {
       return;
     }
     console.log(userData, "iser")
-    let res = await axios.post("http://192.168.31.214:3000/login", userData)
+    let res = await axios.post(`${BASE_URL}/login`, userData)
 
     if (res.status == 200) {
       setUser({
@@ -103,13 +108,14 @@ export const Login: React.FC<NavigationProps> = ({ navigation }) => {
         {
           passwordErr && <Text style={styles.err}>{passwordErr}</Text>
         }
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={[styles.signinContainer, (!userData.email || !userData.password) && { opacity: 0.5 }]}
           onPress={() => signInHandle()}
         >
           <Text style={styles.signinLableStyle}>Signin</Text>
-        </TouchableOpacity>
-
+        </TouchableOpacity> */}
+        <Button lable={"Signin"} lableStyle={styles.signinLableStyle}
+          ButtonContainer={[styles.signinContainer, (!userData.email || !userData.password) && { opacity: 0.5 }]} onPress={signInHandle} />
         <View
           style={styles.allReadyTextContainer}
         >

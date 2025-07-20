@@ -1,5 +1,5 @@
 
-import { Dashboard } from './dashboard'
+import { Dashboard } from './dashboardScreen'
 import {Login} from './signin'
 import { Signup } from './signup'
 export { 

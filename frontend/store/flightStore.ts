@@ -10,13 +10,13 @@ const useFlightStore = create((set) => ({
     passengers: 1,
     travelClass: 'economy',
   },
-  setSearchParams: (params) => set({ searchParams: params }),
+  setSearchParams: (params:any) => set({ searchParams: params }),
 
-  flights:  flightList,
-  setFlights: (flights) => set({ flights }),
+  flights:  [],
+  setFlights: (flights:any) => set({ flights }),
 
   selectedFlight: null,
-  setSelectedFlight: (flight) => set({ selectedFlight: flight }),
+  setSelectedFlight: (flight:any) => set({ selectedFlight: flight }),
 
   clearStore: () =>
     set({

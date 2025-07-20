@@ -5,7 +5,6 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   StyleSheet,
   Pressable,
   Dimensions,
@@ -17,6 +16,8 @@ import useUserStore from "../store/userStore";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { isValidEmail } from "../utils/validEmail";
 import axios from "axios";
+import { Button } from "../components/Button";
+import { BASE_URL } from "../api";
 type RootStackParamList = {
   Login: undefined
   Home: undefined
@@ -26,7 +27,7 @@ type SignupScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>
 }
 
-export const Signup: React.FC<SignupScreenProps> = ({ navigation })=> {
+export const Signup: React.FC<SignupScreenProps> = ({ navigation }) => {
 
   const [emailErr, setEmailErr] = useState("")
   const [passwordErr, setPasswordErr] = useState("")
@@ -50,32 +51,32 @@ export const Signup: React.FC<SignupScreenProps> = ({ navigation })=> {
 
     if (!userData?.email) {
       setEmailErr("email is required")
- 
+
       return;
     }
-      if(!isValidEmail(userData.email.trim())){
-            setEmailErr('enter a valid email')
-          return
-        }
+    if (!isValidEmail(userData.email.trim())) {
+      setEmailErr('enter a valid email')
+      return
+    }
     if (!userData?.password) {
       setPasswordErr("password is required")
 
       return;
     }
-     let res=await axios.post("http://192.168.31.214:3000/register" ,userData )
-     if(res.status==201){
-   navigation.navigate("Login")
-     }
- 
+    let res = await axios.post(`${BASE_URL}/register`, userData)
+    if (res.status == 201) {
+      navigation.navigate("Login")
+    }
+
 
   };
 
-  const handleChange=useCallback((value:any)=>{
-setUserData({...userData , ...value})
-setEmailErr("")
-setNameErr("")
-setPasswordErr("")
-  } , [setUserData , userData])
+  const handleChange = useCallback((value: any) => {
+    setUserData({ ...userData, ...value })
+    setEmailErr("")
+    setNameErr("")
+    setPasswordErr("")
+  }, [setUserData, userData])
 
   return (
     <ScrollView style={{ marginHorizontal: 20 }}>
@@ -114,8 +115,8 @@ setPasswordErr("")
 
         <TextInput
           style={styles.input}
-      
-            onChangeText={(e) => handleChange({ email: e.trim() })}
+
+          onChangeText={(e) => handleChange({ email: e.trim() })}
           value={userData.email}
           placeholder="Enter your email"
         />
@@ -130,7 +131,7 @@ setPasswordErr("")
         <TextInput
           style={styles.input}
 
-           onChangeText={(e) => handleChange({ password: e.trim() })}
+          onChangeText={(e) => handleChange({ password: e.trim() })}
           value={userData.password}
           secureTextEntry={true}
           placeholder="Enter your password"
@@ -139,18 +140,9 @@ setPasswordErr("")
         {
           passwordErr && <Text style={styles.err}>{passwordErr}</Text>
         }
-        <View
-          style={[styles.signupButtonContainer ,  (!userData.name || !userData.email || !userData.password) && { opacity: 0.5 }]}
-        >
-          <TouchableOpacity
-            style={styles.signupButtonContainer}
-            onPress={signUpHandle}
-             disabled={!userData.name || !userData.email || !userData.password}
-          >
-            <Text style={styles.signupLable}>Signup</Text>
-          </TouchableOpacity>
-        </View>
 
+        <Button lable={"Signup"} lableStyle={styles.signupLable} ButtonContainer={[styles.signupButtonContainer, (!userData.name || !userData.email || !userData.password) && { opacity: 0.5 }]}
+          onPress={signUpHandle} />
         <View
           style={styles.allReadyAccountContainer}
         >
@@ -206,7 +198,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 15,
- 
+
   },
   signupLable: { color: "#ffff", fontWeight: "800" },
   allReadyAccountContainer: {
