@@ -5,6 +5,7 @@ import { CommonActions } from "@react-navigation/native";
 
 const BookNowScreen = ({ navigation, route }) => {
      const { user } = useUserStore()
+   
     const [name, setName] = useState(user?.name || "");
     const [email, setEmail] = useState(user?.email || "");
     const [error, setError] = useState("");

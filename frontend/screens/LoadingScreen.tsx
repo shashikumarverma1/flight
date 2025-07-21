@@ -4,7 +4,6 @@ import {ActivityIndicator, Dimensions, StyleSheet, View} from 'react-native';
 const windowhight = Dimensions.get("window").height;
 export const LoadingScreen = () => (
   <View style={[styles.container, styles.horizontal]}>
-
     <ActivityIndicator size="large" color="#000000" />
   </View>
 );

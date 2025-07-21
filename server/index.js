@@ -37,13 +37,14 @@ app.post('/register', async (req, res) => {
 // Login route
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
-  console.log(req.body, "<<< login body");
+  console.log(req.body, "<<< login body" , users);
 
   if (!email || !password) {
     return res.status(400).json({ message: 'Email and password are required' });
   }
 
   const user = users.find(user => user.email === email);
+  console.log(user , "user")
   if (!user) {
     return res.status(401).json({ message: 'Invalid email or password' });
   }

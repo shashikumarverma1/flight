@@ -18,13 +18,11 @@ import { isValidEmail } from "../utils/validEmail";
 import axios from "axios";
 import { Button } from "../components/Button";
 import { BASE_URL } from "../api";
-type RootStackParamList = {
-  Login: undefined
-  Home: undefined
-}
+import { RootStackParamList } from "../navigation/rootStack";
+
 
 type SignupScreenProps = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>
+  navigation: NativeStackNavigationProp<RootStackParamList>
 }
 
 export const Signup: React.FC<SignupScreenProps> = ({ navigation }) => {
@@ -65,6 +63,10 @@ export const Signup: React.FC<SignupScreenProps> = ({ navigation }) => {
     }
     let res = await axios.post(`${BASE_URL}/register`, userData)
     if (res.status == 201) {
+        setUser({
+      name: userData?.name,
+    email: userData?.email,
+      })
       navigation.navigate("Login")
     }
 

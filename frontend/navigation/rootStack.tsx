@@ -9,12 +9,18 @@ import { Login, Signup } from '../screens';
 
 
 const Stack = createStackNavigator();
-
-function RootStack() {
+export type RootStackParamList = {
+  Dashboard: undefined;
+  FlightDetailsScreen: { id: string };
+  FlightListScreen:undefined;
+  BookNowScreen:undefined
+};
+const RootStack :React.FC<RootStackParamList>=()=>{
   const { user } = useUserStore()
+
   return (
     <Stack.Navigator screenOptions={{ animationEnabled: false, headerShown: false }}>
-      {user ? (
+      {user?.token ? (
         <>
           <Stack.Screen name="Home" component={Dashboard} />
           <Stack.Screen name="FlightDetailsScreen" component={FlightDetailsScreen} />

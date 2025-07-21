@@ -31,14 +31,9 @@ export const Login: React.FC<NavigationProps> = ({ navigation }) => {
     email: "",
     password: "",
   });
-console.log(user)
+
   const signInHandle = async () => {
-    console.log(user , "cjsdj")
-  setUser({
-       name:"shashi",
-       email:"s@gmail.com",
-       token:"sjhdhdshkfbsdhbfh"
-      })
+
     if (!userData.email) {
       setEmailErr('email is required field')
       return;
@@ -53,9 +48,9 @@ console.log(user)
     }
     console.log(userData, "iser")
     let res = await axios.post(`${BASE_URL}/login`, userData)
-
+console.log(res , "res")
     if (res.status == 200) {
-      setUser({
+      setUser({...user ,
         token: res?.data?.token
       })
     }

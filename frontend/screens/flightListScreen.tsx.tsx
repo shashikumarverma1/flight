@@ -4,8 +4,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { minToHour } from "../utils/formatDuration";
 import { flightList } from "../data/flights";
 import useFlightStore from "../store/flightStore";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../navigation/rootStack";
 
-export const FlightListScreen = ({ navigation }) => {
+type FlightListScreenProps = {
+  navigation: NativeStackNavigationProp<RootStackParamList>
+}
+
+export const FlightListScreen:React.FC<FlightListScreenProps> = ({ navigation }) => {
   const flights = useFlightStore(state => state.flights);
    const [flightData , setFlightData]=useState(flights )
   useEffect(()=>{

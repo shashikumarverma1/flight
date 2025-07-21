@@ -2,8 +2,15 @@ import React from 'react';
 import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
 import moment from 'moment';
 import { Button } from '../components/Button';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation/rootStack';
 
-const FlightDetailsScreen = ({ route , navigation }) => {
+type FlightDetailsScreenProps = {
+  navigation: NativeStackNavigationProp<RootStackParamList>
+  route:any
+}
+
+const FlightDetailsScreen:React.FC<FlightDetailsScreenProps> = ({ route , navigation }) => {
   const { flight } = route.params;
 
   const {

@@ -20,8 +20,16 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
 import { LoadingScreen } from "./LoadingScreen";
 import useUserStore from "../store/userStore";
-
-export const Dashboard = ({ navigation }: { navigation: any }) => {
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+type RootStackParamList = {
+  Signup: undefined;
+  Home: undefined;
+}
+type NavigationProps = {
+  navigation: NativeStackNavigationProp<RootStackParamList, 'Signup'>
+}
+export const Dashboard:React.FC<NavigationProps> = ({ navigation }) => {
+  
   const { searchAirport } = useAirportStore();
   const { flights ,setFlights  } = useFlightStore();
   const {clearUser}=useUserStore()
@@ -35,7 +43,6 @@ const [loading , setLoading]=useState(false)
    const fetchFlights = async () => {
     navigation.navigate("FlightListScreen")
     setLoading(true);
-    // clearUser()
     try {
       const response = await axios.get(
         'https://sky-scrapper.p.rapidapi.com/api/v1/flights/searchFlights',
@@ -118,8 +125,8 @@ if(loading){
       </View>
 
        <View style={styles.dropdownWrapper}>
-        <TouchableOpacity onPress={showDatePicker}>
- <Text style={styles.label}>Select Date</Text>
+        <TouchableOpacity onPress={showDatePicker} style={styles.selectDate}>
+ <Text style={[styles.label , ]}>Select Date</Text>
         </TouchableOpacity>
        
         <Text style={{ marginBottom: 10 }}>
@@ -158,6 +165,17 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     fontWeight: "500",
     color: "#333",
+    padding:5,
+  
+  },
+  selectDate:{
+    backgroundColor:'#cbd6dbff', 
+    // padding:5,
+    width:"35%",
+    flexDirection:'row',
+    justifyContent:"center",
+    alignItems:'center',
+    borderRadius:20
   },
   searchBtn: {
     backgroundColor: "#0D88C3",
